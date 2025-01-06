@@ -1,41 +1,34 @@
-def slope(x1, y1, x2, y2):
-    return (y2 - y1) / (x2 - x1)
-
 N = int(input())
+arr = list(map(int, input().split()))
+answer = 0
 
-buildings = list(map(int, input().split()))
+for i in range(N):
+    cnt = 0  # 보이는 빌딩 수
 
-result = 0
-for i1, y1 in enumerate(buildings):
-    x1 = i1 + 1
-    # 오른쪽 볼 수 있는 빌딩 수
-    cur_slope_right = None
-    visible_right = 0
-    for i2 in range(i1+1, N+1):
-        if i2 == N: break
-        x2 = i2 + 1
-        y2 = buildings[i2]
-        slope_right = slope(x1, y1, x2, y2)
-        # print("RIGHT:", x1, y1, x2, y2, slope_right)
-        if cur_slope_right is None or cur_slope_right < slope_right:
-            cur_slope_right = slope_right
-            visible_right += 1
-    # print("visible_right:", visible_right)
+    # 오른쪽 기울기 비교
+    max_right = -float('inf')  # 기울기 초기화 (가장 작은 값으로 설정)
+    for j in range(i + 1, N):
+        x1, y1 = i, arr[i]
+        x2, y2 = j, arr[j]
 
-    # 왼쪽 볼 수 있는 빌딩 수
-    cur_slope_left = None
-    visible_left = 0
-    for i3 in range(i1-1, -1, -1):
-        if i3 == -1: break
-        x2 = i3 + 1
-        y2 = buildings[i3]
-        slope_left = slope(x1, y1, x2, y2)
-        # print("LEFT:", x1, y1, x2, y2, slope_left)
-        if cur_slope_left is None or cur_slope_left > slope_left:
-            cur_slope_left = slope_left
-            visible_left += 1
-    # print("visible_left:", visible_left)
+        a = (y2 - y1) / (x2 - x1)  # 기울기 계산
 
-    if (visible_left + visible_right) > result: result = visible_left + visible_right
+        if a > max_right:  # 이전 기울기보다 더 큰 기울기일 경우만 보인다
+            max_right = a
+            cnt += 1
 
-print(result)
+    # 왼쪽 기울기 비교
+    max_left = float('inf')  # 기울기 초기화 (가장 큰 값으로 설정)
+    for j in range(i - 1, -1, -1):
+        x1, y1 = i, arr[i]
+        x2, y2 = j, arr[j]
+
+        a = (y2 - y1) / (x2 - x1)  # 기울기 계산
+
+        if a < max_left:  # 이전 기울기보다 더 작은 기울기일 경우만 보인다
+            max_left = a
+            cnt += 1
+
+    answer = max(answer, cnt)
+
+print(answer)
