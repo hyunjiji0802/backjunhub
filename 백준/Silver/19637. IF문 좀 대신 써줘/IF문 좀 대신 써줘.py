@@ -1,7 +1,5 @@
 from sys import stdin
 N, M = map(int,stdin.readline().split())
-text = []
-power = []
 
 power_dic = {}
 for _ in range(N):
@@ -9,9 +7,7 @@ for _ in range(N):
     if int(p) in power_dic: #중복 X
         continue
     else:
-        text.append(t)
         power_dic[int(p)] = t
-        power.append(int(p))
 
 input_list = []
 for _ in range(M):
@@ -30,6 +26,8 @@ def binary_search(arr, st, start, end):
     elif arr[mid] > st:
         return binary_search(arr, st, start, mid - 1)
 
+power_list = list(power_dic.keys())
+
 for inputs in input_list:
-    id = binary_search(power, inputs, 0, len(power) - 1)
-    print(text[id])
+    id = binary_search(power_list, inputs, 0, len(power_list) - 1)
+    print(power_dic[power_list[id]])
