@@ -1,0 +1,68 @@
+# A : Front End 스킬과 Python 스킬을 함께 가지고 있는 개발자
+# B : C# 스킬을 가진 개발자
+# C : 그 외의 Front End 개발자
+# GRADE가 존재하는 개발자의 GRADE, ID, EMAIL을 조회
+# 결과는 GRADE와 ID를 기준으로 오름차순
+
+#GRADE ABC 3개 union all로 합치기
+
+# GRADE A 파이썬이랑 프론트엔드
+WITH GRADE_A AS (
+SELECT
+    'A' AS GRADE, ID, EMAIL
+FROM DEVELOPERS d
+WHERE ((d.SKILL_CODE & (
+  SELECT SUM(CODE)
+  FROM SKILLCODES
+  WHERE CATEGORY = 'Front End' 
+)) != 0)
+AND ((d.SKILL_CODE & (
+  SELECT SUM(CODE)
+  FROM SKILLCODES
+  WHERE NAME = 'Python' 
+)) != 0)
+),
+
+# GRADE B C# 스킬을 가진 개발자
+GRADE_B AS (
+SELECT
+    'B' AS GRADE, ID, EMAIL
+FROM DEVELOPERS d
+WHERE (d.SKILL_CODE & (
+  SELECT SUM(CODE)
+  FROM SKILLCODES
+  WHERE NAME = 'C#' 
+)) != 0
+AND ID NOT IN (SELECT ID FROM GRADE_A)
+),
+# GRADE C 그 외 Front End 개발자
+GRADE_C AS(
+SELECT
+    'C' AS GRADE, ID, EMAIL
+FROM DEVELOPERS d
+WHERE ((d.SKILL_CODE & (
+  SELECT SUM(CODE)
+  FROM SKILLCODES
+  WHERE CATEGORY = 'Front End' 
+)) != 0)
+AND ID NOT IN (SELECT ID FROM GRADE_A)
+AND ID NOT IN (SELECT ID FROM GRADE_B)
+)
+
+SELECT
+    *
+FROM GRADE_A
+
+UNION ALL
+
+SELECT
+    *
+FROM GRADE_B
+
+UNION ALL
+
+SELECT
+    *
+FROM GRADE_C
+ORDER BY GRADE, ID
+
