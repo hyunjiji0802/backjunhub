@@ -1,17 +1,18 @@
-def solution(p, l):
-    pnum = 0
-    while p: #큐가 빌 때 까지
-        pc = p.pop(0) #큐에서 하나 꺼냄
-        if len(p)>0 and pc < max(p): #큐에 현재 꺼낸 프로세스 우선순위보다 높은 프로세스가 있을 경우
-            p.append(pc) #다시 넣기
-            if l == 0 : #꺼냈던 프로세스가 구하려던 프로세스였다면
-                l=len(p)-1 #프로세스 위치 업데이트
-            else: #다른 프로세스라면
-                l-=1 #앞으로 한 칸 이동
-        else: #꺼낸 프로세스를 실행할 수 있으면
-            pnum+=1
-            if l==0:#꺼냈던 프로세스가 구하려던 프로세스였다면
-                return pnum
-            else:#다른 프로세스라면
-                l-=1 #앞으로 한 칸 이동
-    return pnum
+def solution(priorities, location):
+    answer = 0
+    while priorities:
+        #1. 프로세스 하나 꺼내기
+        p = priorities.pop(0)
+        print(p)
+        #2. 우선순위 높은 프로세스 있으면 다시 큐에 넣기
+        if len(priorities) > 0 and p < max(priorities):
+            priorities.append(p)
+            location = (location - 1) if (location - 1) >= 0 else (len(priorities) - 1)
+        #3. 없으면 프로세스 실행하기
+        else:
+            answer+=1
+            if location == 0:
+                return answer            
+            location -=1
+        
+    
