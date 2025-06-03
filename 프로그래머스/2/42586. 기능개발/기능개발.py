@@ -2,7 +2,6 @@ from math import ceil
 
 def solution(progresses, speeds):
     answer = []
-    
     days = []
     #남은 일수 계산 후 days에 저장
     for i in range(len(progresses)):
