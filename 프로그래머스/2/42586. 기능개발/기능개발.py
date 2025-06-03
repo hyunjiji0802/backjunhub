@@ -1,15 +1,33 @@
-def solution(p, s):
-    answer=[] 
-    while p: #기능 리스트가 빌때까지
-        p = list(map(lambda x,y : x+y, p,s)) #각 기능 진도율 더하기
-        # print(p,s)
-        #배포할 기능이 있는지 맨 앞기능 진도율만 확인
-        publish_num = 0 #배포시 기능의 수
-        if p[0]>=100 :#배포해야하는 경우
-            while len(p)>0 and p[0] >=100: #진도율 100이상만 pop
-                p.pop(0)
-                s.pop(0) #speed 도 같이 pop
-                publish_num+=1 #기능 수 세기
-            answer.append(publish_num)
-                      
+from math import ceil
+
+def solution(progresses, speeds):
+    answer = []
+    
+    days = []
+    #남은 일수 계산 후 days에 저장
+    for i in range(len(progresses)):
+        days.append(ceil((100 - progresses[i]) / speeds[i]))
+    
+    days.reverse()
+
+    cnt = 0
+    maxnum = -1
+    
+    #뒤에서부터 pop하면서 max값과 비교
+    while days:
+        item = days.pop()        
+        #비어있거나 max보다 작으면 append
+        if cnt == 0 or maxnum >= item:
+            cnt += 1
+            maxnum = max(maxnum, item)
+            # print(item, answer)
+            
+        #그렇지 않으면 다른날 기능개발 배포
+        else:
+            answer.append(cnt)
+            cnt = 1
+            maxnum = item  
+            
+    answer.append(cnt)
+    
     return answer
