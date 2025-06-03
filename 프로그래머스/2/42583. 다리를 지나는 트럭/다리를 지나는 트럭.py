@@ -1,11 +1,11 @@
 from collections import deque
 def solution(bl, w, tws):
-    bq = deque([0 for _ in range(bl)] ) # 다리 위 트럭 큐 (전체 트럭 개수만큼 0으로 초기화)
+    bq = deque([0 for _ in range(bl)]) # 다리 위 트럭 큐 (전체 트럭 개수만큼 0으로 초기화)
     tws = deque(tws)
     
-    sum_bq = sum(bq)
-    t = 1
-    while sum_bq>0 or len(tws)>0:  # 대기중인 트럭 큐와 다리 위 트럭 큐가 모두 비어있으면 종료
+    sum_bq = sum(bq) #다리위 무게
+    t = 1 #시간
+    while len(bq) > 0 or len(tws) > 0:  # 대기중인 트럭 큐와 다리 위 트럭 큐가 모두 비어있으면 종료
         truck = bq.popleft() # 앞으로 한 칸 이동
         sum_bq -= truck #다리 위 트럭 무게 업데이트
         bq.append(0)  # 더미 값(0) 추가해서 bq 개수 맞추기
