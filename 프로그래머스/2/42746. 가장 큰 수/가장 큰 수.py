@@ -1,37 +1,23 @@
+from functools import cmp_to_key
+
 def solution(numbers):
-    numbers = list(map(str,numbers)) #숫자를 문자열로 변환
-    for _ in numbers:
-        num = numbers.pop(0)
-        numbers.append(num*4)
+    def compare(x, y):
+        if str(x) + str(y) > str(y) + str(x):
+            return -1
+        elif str(x) + str(y) < str(y) + str(x):
+            return 1
+        else:
+            return 0
 
-    bucket = [[] for _ in range(10)] #나머지 결과를 담을 버킷
-    len_num = 4
-    i = 0
+    # 4자리 패딩 기존 유지하되, 보조 정렬로 직접 비교를 추가해 해결
+    numbers.sort(key=lambda x: (
+        -int(str(x).ljust(4, str(x)[-1])), 
+        -sum(int(digit) for digit in str(x).ljust(4, str(x)[-1])), 
+        len(str(x))
+    ))
 
-    while i < len_num:
-        for num in numbers:   #각 수의 자리수 비교, 나머지 r 를 버킷에 append
-            #뒤에서 i 번째 수를 꺼냄,  append
-            tmp_num = num[:len_num]
-            r = int(tmp_num[-1+(-i)])
-            bucket[r].append(num)
+    # 최종 정확성 보장용 추가 정렬
+    numbers = sorted(numbers, key=cmp_to_key(compare))
 
-        numbers = []
-
-        for nums in bucket: #버킷의 숫자를 앞에서부터 꺼내서 numbers에 append
-            while nums :
-                num = nums.pop(0)
-                numbers.append(num)
-        i +=1
-
-    numbers.reverse()
-    for _ in numbers:
-        num = numbers.pop(0)
-
-        numbers.append(num[:len(num)//4])
-
-    answer = "".join(map(str,numbers))
-
-    if answer == '0'*len(answer):
-        return '0'
-    else:
-        return answer
+    result = ''.join(map(str, numbers))
+    return '0' if result[0] == '0' else result
