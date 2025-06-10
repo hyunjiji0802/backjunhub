@@ -1,6 +1,11 @@
+# 최소시간 이분탐색
+# 1. 탐색 범위 (left, right)
+# 2. 초깃값 ()
+# 3. 탐색 조건
+
 def solution(n, times):
 
-    max_t = max(times) * n + 1  ## 느림보가 혼자 다 할때
+    max_t = max(times) * n  ## 느림보가 혼자 다 할때
     min_t = 0               ## 최소
 
     t = (max_t + min_t) // 2
