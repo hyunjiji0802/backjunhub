@@ -1,32 +1,38 @@
+#  최솟값을 return  ->>> BFS
 from collections import deque
 
-#  최솟값을 return  ->>> BFS
 def solution(maps):
-    n, m = len(maps), len(maps[0])  # 행, 열
-    visited = [[False] * m for _ in range(n)]
-    dx = [-1, 1, 0, 0]  # 상, 하, 좌, 우
-    dy = [0, 0, -1, 1]
+    n = len(maps)        # 행
+    m = len(maps[0])     # 열
 
-    def bfs(x, y):
-        queue = deque()
-        queue.append((x, y, 1))  # 시작 좌표와 거리
-        visited[x][y] = True
+    # 상하좌우 이동 좌표
+    dx = [-1, 1, 0, 0]  # 상하
+    dy = [0, 0, -1, 1]  # 좌우
 
-        while queue:
-            x, y, dist = queue.popleft()
+    # 큐에 시작 위치 삽입 (x, y)
+    queue = deque()
+    queue.append((0, 0))
 
-            if x == n - 1 and y == m - 1:
-                return dist  # 도착하면 거리 리턴
+    while queue:
+        x, y = queue.popleft()
 
-            for dir in range(4):
-                nx = x + dx[dir]
-                ny = y + dy[dir]
+        for i in range(4):  # 4방향 탐색
+            nx = x + dx[i]
+            ny = y + dy[i]
 
-                if 0 <= nx < n and 0 <= ny < m:
-                    if maps[nx][ny] == 1 and not visited[nx][ny]:
-                        visited[nx][ny] = True
-                        queue.append((nx, ny, dist + 1))
+            # 맵 범위 밖은 제외
+            if nx < 0 or nx >= n or ny < 0 or ny >= m:
+                continue
+            # 벽이거나 방문한 곳은 제외
+            if maps[nx][ny] == 0:
+                continue
+            if maps[nx][ny] == 1:  # 방문하지 않은 길이라면
+                maps[nx][ny] = maps[x][y] + 1  # 거리 갱신
+                queue.append((nx, ny))
 
-        return -1  # 도달 실패
+    # 도착점에 도달하지 못했다면 -1
+    if maps[n-1][m-1] == 1:
+        return -1
+    else:
+        return maps[n-1][m-1]
 
-    return bfs(0, 0)
