@@ -1,14 +1,15 @@
-from itertools import combinations
-
 def solution(clothes):
-    cloth_dic = {}
-    for name , cloth in clothes:
-        if cloth_dic.get(cloth) == None: #딕셔너리에 없으면
-            cloth_dic[cloth] = 2
-        else: #있으면 리스트 추가
-            cloth_dic[cloth] +=1
-    print(cloth_dic)
-    answer = 1 # 팩토리얼 곱하기
-    for cnt in cloth_dic.values():
-        answer*=cnt
-    return answer -1
+    answer = 1
+    d = dict()
+    for name,cloth in clothes:
+        if d.get(cloth) is None:
+            d[cloth] = set([name])
+        else:
+            d[cloth].add(name)
+    
+
+    for k, v in d.items():
+        number = (len(v) + 1)
+        answer *= number
+
+    return answer - 1
