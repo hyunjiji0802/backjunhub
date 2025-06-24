@@ -1,28 +1,27 @@
-import heapq as h
+import heapq
+
 def solution(scoville, K):
-    heap = []
-    for value in scoville:
-        h.heappush(heap,value)
+    answer = 0
+    #섞은 음식 스코빌지수 = 제일 덜매운거 + (두번째로 덜매운거*2)
+    #모든 음식 스코빌지수가 K 이상일때까지 반복
+    #앞에꺼 두개 빼서 새 스코빌지수 heap 에 넣기 반복
 
-    mixed_num = 0
+    heapq.heapify(scoville)
+    
+    min_scoville = scoville[0]
+    
+    while min_scoville < K and len(scoville)>=2:
+        m1 = heapq.heappop(scoville)
+        m2 = heapq.heappop(scoville)
 
-    if heap[0] >= K:
-        return mixed_num
 
-    while heap and heap[0] < K: #모든 음식의 스코빌 지수가 K 이상이 될 때 까지
-        first = h.heappop(heap)
-        if len(heap)>=1: #섞을 수 있는 경우
-            second = h.heappop(heap)
+        new_scoville = m1 + m2 * 2
+        
+        heapq.heappush(scoville, new_scoville)
+        
+        min_scoville = scoville[0]
 
-            mixed = first + (second * 2)
-            mixed_num+=1
-
-            h.heappush(heap,mixed)
-        else: #섞을 수 없는 경우
-            h.heappush(heap,first)
-            break
-
-    if heap[0] >= K:
-        return mixed_num
-    else:
-        return -1
+        answer +=1
+        # print(m1,m2, new_scoville, min_scoville, answer, scoville )
+    
+    return answer if min_scoville >=K else -1
